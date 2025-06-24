@@ -12,7 +12,7 @@ interface Todo {
   order: number;
 }// or wherever your interface is
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/todos`;
+const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/todos`;
 
 export const addTodoFromApi = async (
   todoInput: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'order'>,userId:string,

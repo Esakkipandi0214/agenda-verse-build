@@ -98,7 +98,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   dispatch({ type: 'AUTH_START' });
 
   try {
-    const response = await axios.post('http://localhost:3000/api/userActions/login', {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/userActions/login`, {
       email,
       password,
     });
@@ -125,7 +125,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   dispatch({ type: 'AUTH_START' });
 
   try {
-    const response = await axios.post('http://localhost:3000/api/userActions', {
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/userActions`, {
       name,
       email,
       password

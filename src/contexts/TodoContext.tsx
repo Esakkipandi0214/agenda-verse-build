@@ -138,7 +138,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const userId = parsedUser._id;
 
     try {
-      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/todos/user/${userId}`, {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/todos/user/${userId}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
