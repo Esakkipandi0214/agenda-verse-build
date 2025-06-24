@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
@@ -8,6 +7,7 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import SocialLoginButtons from '@/components/SocialLoginButtons';
 
 const Auth = () => {
   const { login, register, isAuthenticated, isLoading, error, clearError } = useAuth();
@@ -26,6 +26,12 @@ const Auth = () => {
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
+
+  const handleGoogleLogin = () => {
+    // TODO: Implement Google OAuth with your MongoDB backend
+    console.log('Google login clicked - integrate with your MongoDB backend');
+    // You can add your MongoDB/Google OAuth integration here
+  };
 
   const validateForm = (isLogin: boolean) => {
     const errors: Record<string, string> = {};
@@ -113,118 +119,132 @@ const Auth = () => {
             )}
 
             <TabsContent value="login">
-              <form onSubmit={(e) => handleSubmit(e, true)} className="space-y-4">
-                <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input
-                    id="email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                    placeholder="demo@example.com"
-                  />
-                  {formErrors.email && (
-                    <p className="text-sm text-red-600 mt-1">{formErrors.email}</p>
-                  )}
-                </div>
-                <div>
-                  <Label htmlFor="password">Password</Label>
-                  <Input
-                    id="password"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                    placeholder="password"
-                  />
-                  {formErrors.password && (
-                    <p className="text-sm text-red-600 mt-1">{formErrors.password}</p>
-                  )}
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full gradient-primary hover:opacity-90 transition-opacity"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Signing in...' : 'Sign In'}
-                </Button>
-                <p className="text-sm text-gray-600 text-center mt-4">
-                  Demo credentials: demo@example.com / password
-                </p>
-              </form>
+              <div className="space-y-4">
+                <SocialLoginButtons 
+                  onGoogleLogin={handleGoogleLogin}
+                  isLoading={isLoading}
+                />
+                
+                <form onSubmit={(e) => handleSubmit(e, true)} className="space-y-4">
+                  <div>
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="mt-1"
+                      placeholder="demo@example.com"
+                    />
+                    {formErrors.email && (
+                      <p className="text-sm text-red-600 mt-1">{formErrors.email}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="password">Password</Label>
+                    <Input
+                      id="password"
+                      name="password"
+                      type="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="mt-1"
+                      placeholder="password"
+                    />
+                    {formErrors.password && (
+                      <p className="text-sm text-red-600 mt-1">{formErrors.password}</p>
+                    )}
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full gradient-primary hover:opacity-90 transition-opacity"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Signing in...' : 'Sign In'}
+                  </Button>
+                  <p className="text-sm text-gray-600 text-center mt-4">
+                    Demo credentials: demo@example.com / password
+                  </p>
+                </form>
+              </div>
             </TabsContent>
 
             <TabsContent value="register">
-              <form onSubmit={(e) => handleSubmit(e, false)} className="space-y-4">
-                <div>
-                  <Label htmlFor="name">Full Name</Label>
-                  <Input
-                    id="name"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                    placeholder="John Doe"
-                  />
-                  {formErrors.name && (
-                    <p className="text-sm text-red-600 mt-1">{formErrors.name}</p>
-                  )}
-                </div>
-                <div>
-                  <Label htmlFor="register-email">Email</Label>
-                  <Input
-                    id="register-email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                    placeholder="you@example.com"
-                  />
-                  {formErrors.email && (
-                    <p className="text-sm text-red-600 mt-1">{formErrors.email}</p>
-                  )}
-                </div>
-                <div>
-                  <Label htmlFor="register-password">Password</Label>
-                  <Input
-                    id="register-password"
-                    name="password"
-                    type="password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                    placeholder="At least 6 characters"
-                  />
-                  {formErrors.password && (
-                    <p className="text-sm text-red-600 mt-1">{formErrors.password}</p>
-                  )}
-                </div>
-                <div>
-                  <Label htmlFor="confirmPassword">Confirm Password</Label>
-                  <Input
-                    id="confirmPassword"
-                    name="confirmPassword"
-                    type="password"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    className="mt-1"
-                  />
-                  {formErrors.confirmPassword && (
-                    <p className="text-sm text-red-600 mt-1">{formErrors.confirmPassword}</p>
-                  )}
-                </div>
-                <Button
-                  type="submit"
-                  className="w-full gradient-primary hover:opacity-90 transition-opacity"
-                  disabled={isLoading}
-                >
-                  {isLoading ? 'Creating account...' : 'Create Account'}
-                </Button>
-              </form>
+              <div className="space-y-4">
+                <SocialLoginButtons 
+                  onGoogleLogin={handleGoogleLogin}
+                  isLoading={isLoading}
+                />
+                
+                <form onSubmit={(e) => handleSubmit(e, false)} className="space-y-4">
+                  <div>
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className="mt-1"
+                      placeholder="John Doe"
+                    />
+                    {formErrors.name && (
+                      <p className="text-sm text-red-600 mt-1">{formErrors.name}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="register-email">Email</Label>
+                    <Input
+                      id="register-email"
+                      name="email"
+                      type="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className="mt-1"
+                      placeholder="you@example.com"
+                    />
+                    {formErrors.email && (
+                      <p className="text-sm text-red-600 mt-1">{formErrors.email}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="register-password">Password</Label>
+                    <Input
+                      id="register-password"
+                      name="password"
+                      type="password"
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="mt-1"
+                      placeholder="At least 6 characters"
+                    />
+                    {formErrors.password && (
+                      <p className="text-sm text-red-600 mt-1">{formErrors.password}</p>
+                    )}
+                  </div>
+                  <div>
+                    <Label htmlFor="confirmPassword">Confirm Password</Label>
+                    <Input
+                      id="confirmPassword"
+                      name="confirmPassword"
+                      type="password"
+                      value={formData.confirmPassword}
+                      onChange={handleInputChange}
+                      className="mt-1"
+                    />
+                    {formErrors.confirmPassword && (
+                      <p className="text-sm text-red-600 mt-1">{formErrors.confirmPassword}</p>
+                    )}
+                  </div>
+                  <Button
+                    type="submit"
+                    className="w-full gradient-primary hover:opacity-90 transition-opacity"
+                    disabled={isLoading}
+                  >
+                    {isLoading ? 'Creating account...' : 'Create Account'}
+                  </Button>
+                </form>
+              </div>
             </TabsContent>
           </Tabs>
         </CardContent>
