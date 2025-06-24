@@ -7,8 +7,14 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import TodoForm from './TodoForm';
-import { Edit, Trash2, MoreVertical, Calendar, Clock } from 'lucide-react';
+import { Edit, Trash2, MoreVertical, Calendar, Clock, GripVertical } from 'lucide-react';
 import { format, isToday, isTomorrow, isPast } from 'date-fns';
+import {
+  useSortable,
+} from '@dnd-kit/sortable';
+import {
+  CSS,
+} from '@dnd-kit/utilities';
 
 interface TodoItemProps {
   todo: Todo;
@@ -18,6 +24,21 @@ interface TodoItemProps {
 const TodoItem: React.FC<TodoItemProps> = ({ todo, index }) => {
   const { toggleTodo, deleteTodo, updateTodo } = useTodos();
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: todo.id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
 
   const getPriorityColor = (priority: string) => {
     switch (priority) {
@@ -55,14 +76,28 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index }) => {
   const isOverdue = todo.dueDate && isPast(todo.dueDate) && !isToday(todo.dueDate);
 
   return (
-    <div className={`
-      group p-4 rounded-lg border bg-white/50 hover:bg-white/70 transition-all duration-200
-      hover:shadow-md hover:scale-[1.02] animate-slide-up
-      ${todo.completed ? 'opacity-60' : ''}
-      ${isOverdue && !todo.completed ? 'border-red-200 bg-red-50/50' : ''}
-      ${isDueToday && !todo.completed ? 'border-yellow-200 bg-yellow-50/50' : ''}
-    `}>
+    <div
+      ref={setNodeRef}
+      style={style}
+      className={`
+        group p-4 rounded-lg border bg-white/50 hover:bg-white/70 transition-all duration-200
+        hover:shadow-md hover:scale-[1.02] animate-slide-up
+        ${todo.completed ? 'opacity-60' : ''}
+        ${isOverdue && !todo.completed ? 'border-red-200 bg-red-50/50' : ''}
+        ${isDueToday && !todo.completed ? 'border-yellow-200 bg-yellow-50/50' : ''}
+        ${isDragging ? 'z-50 shadow-2xl' : ''}
+      `}
+    >
       <div className="flex items-start gap-3">
+        {/* Drag Handle */}
+        <div
+          {...attributes}
+          {...listeners}
+          className="mt-1 p-1 cursor-grab active:cursor-grabbing opacity-0 group-hover:opacity-100 transition-opacity"
+        >
+          <GripVertical className="w-4 h-4 text-gray-400" />
+        </div>
+
         <Checkbox
           checked={todo.completed}
           onCheckedChange={() => toggleTodo(todo.id)}

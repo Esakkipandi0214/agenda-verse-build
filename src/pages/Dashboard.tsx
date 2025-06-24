@@ -6,9 +6,11 @@ import TodoForm from '@/components/TodoForm';
 import TodoList from '@/components/TodoList';
 import TodoStats from '@/components/TodoStats';
 import TodoFilters from '@/components/TodoFilters';
+import AnalyticsDashboard from '@/components/AnalyticsDashboard';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { LogOut, Plus, User } from 'lucide-react';
+import { LogOut, Plus, User, BarChart3, List } from 'lucide-react';
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -70,22 +72,35 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-          {/* Stats Overview */}
-          <div className="lg:col-span-4">
-            <TodoStats stats={stats} />
-          </div>
-
-          {/* Filters */}
-          <div className="lg:col-span-4">
-            <TodoFilters />
-          </div>
-
-          {/* Todo List */}
-          <div className="lg:col-span-4">
-            <TodoList />
-          </div>
+        {/* Stats Overview */}
+        <div className="mb-6">
+          <TodoStats stats={stats} />
         </div>
+
+        {/* Tabs for different views */}
+        <Tabs defaultValue="todos" className="space-y-6">
+          <TabsList className="grid w-full max-w-md mx-auto grid-cols-2">
+            <TabsTrigger value="todos" className="flex items-center gap-2">
+              <List className="w-4 h-4" />
+              Todo List
+            </TabsTrigger>
+            <TabsTrigger value="analytics" className="flex items-center gap-2">
+              <BarChart3 className="w-4 h-4" />
+              Analytics
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="todos" className="space-y-6">
+            {/* Filters */}
+            <TodoFilters />
+            {/* Todo List */}
+            <TodoList />
+          </TabsContent>
+
+          <TabsContent value="analytics">
+            <AnalyticsDashboard />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
