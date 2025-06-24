@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useTodos } from '@/contexts/TodoContext';
 import TodoItem from './TodoItem';
@@ -39,14 +38,12 @@ const TodoList = () => {
     const { active, over } = event;
 
     if (over && active.id !== over.id) {
-      const oldIndex = filteredTodos.findIndex((todo) => todo.id === active.id);
-      const newIndex = filteredTodos.findIndex((todo) => todo.id === over.id);
+      const oldIndex = todos.findIndex((todo) => todo.id === active.id);
+      const newIndex = todos.findIndex((todo) => todo.id === over.id);
       
-      // Find the actual indices in the full todos array
-      const actualOldIndex = todos.findIndex((todo) => todo.id === active.id);
-      const actualNewIndex = todos.findIndex((todo) => todo.id === over.id);
-      
-      reorderTodos(actualOldIndex, actualNewIndex);
+      if (oldIndex !== -1 && newIndex !== -1) {
+        reorderTodos(oldIndex, newIndex);
+      }
     }
   };
 
@@ -110,8 +107,8 @@ const TodoList = () => {
         >
           <SortableContext items={filteredTodos.map(todo => todo.id)} strategy={verticalListSortingStrategy}>
             <div className="space-y-3">
-              {filteredTodos.map((todo, index) => (
-                <TodoItem key={todo.id} todo={todo} index={index} />
+              {filteredTodos.map((todo) => (
+                <TodoItem key={todo.id} todo={todo} index={0} />
               ))}
             </div>
           </SortableContext>
