@@ -1,5 +1,6 @@
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import axios from 'axios';
 
 interface User {
   id: string;
@@ -94,47 +95,61 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   const login = async (email: string, password: string) => {
-    dispatch({ type: 'AUTH_START' });
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Mock validation
-      if (email === 'demo@example.com' && password === 'password') {
-        const user = { id: '1', email, name: 'Demo User' };
-        const token = 'mock-jwt-token';
-        
-        localStorage.setItem('token', token);
-        localStorage.setItem('user', JSON.stringify(user));
-        
-        dispatch({ type: 'AUTH_SUCCESS', payload: user });
-      } else {
-        throw new Error('Invalid credentials');
-      }
-    } catch (error) {
-      dispatch({ type: 'AUTH_ERROR', payload: error instanceof Error ? error.message : 'Login failed' });
-    }
-  };
+  dispatch({ type: 'AUTH_START' });
+
+  try {
+    const response = await axios.post('http://localhost:3000/api/userActions/login', {
+      email,
+      password,
+    });
+
+    const { user, token } = response.data;
+
+    // Store token and user in localStorage
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+
+    dispatch({ type: 'AUTH_SUCCESS', payload: user });
+  } catch (error: any) {
+    const message =
+      error.response?.data?.error ||
+      error.message ||
+      'Login failed';
+
+    dispatch({ type: 'AUTH_ERROR', payload: message });
+  }
+};
+
 
   const register = async (name: string, email: string, password: string) => {
-    dispatch({ type: 'AUTH_START' });
-    
-    try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      const user = { id: Date.now().toString(), email, name };
-      const token = 'mock-jwt-token';
-      
-      localStorage.setItem('token', token);
-      localStorage.setItem('user', JSON.stringify(user));
-      
-      dispatch({ type: 'AUTH_SUCCESS', payload: user });
-    } catch (error) {
-      dispatch({ type: 'AUTH_ERROR', payload: error instanceof Error ? error.message : 'Registration failed' });
-    }
-  };
+  dispatch({ type: 'AUTH_START' });
+
+  try {
+    const response = await axios.post('http://localhost:3000/api/userActions', {
+      name,
+      email,
+      password
+    });
+
+    const { user, token } = response.data;
+
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+
+    dispatch({ type: 'AUTH_SUCCESS', payload: user });
+
+    // Optional: Set token for future API calls
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  } catch (error: any) {
+    const message =
+      error.response?.data?.error ||
+      error.message ||
+      'Registration failed';
+
+    dispatch({ type: 'AUTH_ERROR', payload: message });
+  }
+};
+
 
   const logout = () => {
     localStorage.removeItem('token');

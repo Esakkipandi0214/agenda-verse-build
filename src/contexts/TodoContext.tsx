@@ -1,5 +1,7 @@
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
+import { addTodoFromApi,toggleTodoStatusFromApi,deleteTodoFromApi,updateTodoFromApi } from '@/lib/todo';
+import axios from 'axios';
 
 export interface Todo {
   id: string;
@@ -122,51 +124,133 @@ export const useTodos = () => {
 export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(todoReducer, initialState);
 
-  useEffect(() => {
-    // Load todos from localStorage
-    const savedTodos = localStorage.getItem('todos');
-    if (savedTodos) {
-      try {
-        const todos = JSON.parse(savedTodos).map((todo: any) => ({
-          ...todo,
-          createdAt: new Date(todo.createdAt),
-          updatedAt: new Date(todo.updatedAt),
-          dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined,
-        }));
-        dispatch({ type: 'SET_TODOS', payload: todos });
-      } catch (error) {
-        console.error('Error loading todos:', error);
-      }
+ useEffect(() => {
+  const fetchTodos = async () => {
+    const token = localStorage.getItem('token');
+    const user = localStorage.getItem('user');
+
+    if (!token || !user) {
+      console.error('No token or user found. Please log in.');
+      return;
     }
-  }, []);
+
+    const parsedUser = JSON.parse(user);
+    const userId = parsedUser._id;
+
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/todos/user/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const todos = response.data.map((todo: any) => ({
+        ...todo,
+        id: todo._id,
+        createdAt: new Date(todo.createdAt),
+        updatedAt: new Date(todo.updatedAt),
+        dueDate: todo.dueDate ? new Date(todo.dueDate) : undefined,
+      }));
+
+      dispatch({ type: 'SET_TODOS', payload: todos });
+    } catch (error) {
+      console.error('Error fetching todos from API:', error);
+    }
+  };
+
+  fetchTodos();
+}, []);
 
   useEffect(() => {
     // Save todos to localStorage whenever todos change
     localStorage.setItem('todos', JSON.stringify(state.todos));
   }, [state.todos]);
 
-  const addTodo = (todoData: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'order'>) => {
-    const newTodo: Todo = {
-      ...todoData,
-      id: Date.now().toString(),
-      createdAt: new Date(),
-      updatedAt: new Date(),
-      order: state.todos.length,
-    };
+ const addTodo = async (todoInput: Omit<Todo, 'id' | 'createdAt' | 'updatedAt' | 'order'>) => {
+  const token = localStorage.getItem('token');
+   const userString = localStorage.getItem('user');
+  if (!token) {
+    console.error('No token found. User might not be authenticated.');
+    return;
+  }
+   if (!userString) {
+    console.error('No user found. User might not be authenticated.');
+    return;
+  }
+
+  const user = JSON.parse(userString);
+  const userId: string = user._id;
+
+  const newTodo = await addTodoFromApi(todoInput,userId, token);
+  if (newTodo) {
     dispatch({ type: 'ADD_TODO', payload: newTodo });
-  };
+  }
+};
 
-  const updateTodo = (id: string, updates: Partial<Todo>) => {
-    dispatch({ type: 'UPDATE_TODO', payload: { id, updates } });
-  };
 
-  const deleteTodo = (id: string) => {
+  const updateTodo = async (id: string, updates: Partial<Todo>) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found. User might not be authenticated.');
+    return;
+  }
+
+  const updated = await updateTodoFromApi(id, updates, token);
+  if (updated) {
+    // Format the updated todo object
+    const formatted = {
+      ...updated,
+      id: updated._id, // ensure `id` is assigned
+      createdAt: new Date(updated.createdAt),
+      updatedAt: new Date(updated.updatedAt),
+      dueDate: updated.dueDate ? new Date(updated.dueDate) : undefined,
+    };
+
+    dispatch({ type: 'UPDATE_TODO', payload: { id, updates: formatted } });
+  }
+};
+
+
+  const deleteTodo = async (id: string) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found. User might not be authenticated.');
+    return;
+  }
+
+  const success = await deleteTodoFromApi(id, token);
+  if (success) {
     dispatch({ type: 'DELETE_TODO', payload: id });
-  };
+  }
+};
 
-  const toggleTodo = (id: string) => {
-    dispatch({ type: 'TOGGLE_TODO', payload: id });
-  };
+  const toggleTodo = async (id: string) => {
+  const token = localStorage.getItem('token');
+  if (!token) {
+    console.error('No token found');
+    return;
+  }
+
+  try {
+    const updatedTodo = await toggleTodoStatusFromApi(id, token);
+
+    if (updatedTodo) {
+      dispatch({
+        type: 'UPDATE_TODO',
+        payload: {
+          id,
+          updates: {
+            completed: updatedTodo.completed,
+            updatedAt: updatedTodo.updatedAt,
+          },
+        },
+      });
+    }
+  } catch (error) {
+    console.error('Error toggling todo:', error);
+  }
+};
+
 
   const reorderTodos = (sourceIndex: number, destinationIndex: number) => {
     dispatch({ type: 'REORDER_TODOS', payload: { sourceIndex, destinationIndex } });
@@ -279,3 +363,5 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   return <TodoContext.Provider value={value}>{children}</TodoContext.Provider>;
 };
+
+
