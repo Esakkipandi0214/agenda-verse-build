@@ -179,7 +179,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }
 
   const user = JSON.parse(userString);
-  const userId: string = user._id;
+  const userId: string = user.userId;
 
   const newTodo = await addTodoFromApi(todoInput,userId, token);
   if (newTodo) {
