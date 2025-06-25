@@ -2,19 +2,21 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useAuth0 } from "@auth0/auth0-react";
 
 
 interface SocialLoginButtonsProps {
-  onGoogleLogin: () => void;
   isLoading?: boolean;
 }
 
 const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({ 
-  onGoogleLogin, 
   isLoading = false 
 }) => {
-   const { loginWithRedirect } = useAuth0();
+  //  const { loginWithRedirect } = useAuth0();
+  const handleGitHubLogin = () => {
+  const clientId = "Ov23licq6RJwZGiYK9jL";
+  const redirectUri = "http://localhost:3000/auth/github/callback";
+  window.location.assign(`https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}`);
+};
   return (
     <div className="space-y-4">
       <div className="relative">
@@ -32,9 +34,7 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
         type="button"
         variant="outline"
         className="w-full relative"
-        onClick={()=>loginWithRedirect({
-      connection: 'github' // 👈 GitHub social connection name in Auth0
-    } as any)}
+        onClick={handleGitHubLogin}
         disabled={isLoading}
       >
         <svg

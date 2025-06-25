@@ -10,20 +10,13 @@ import Auth from "./pages/Auth";
 import Dashboard from "./pages/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Index from "./pages/Index";
-import { Auth0Provider } from '@auth0/auth0-react';
+import GitHubCallback from './components/Github-success'
 
 const queryClient = new QueryClient();
 
-const domain = "dev-yuv6emo0pmz4qvov.us.auth0.com";
-const clientId = "Ov23licq6RJwZGiYK9jL";
-
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <Auth0Provider
-    domain={domain}
-    clientId={clientId}
-    authorizationParams={{ redirect_uri: window.location.origin }}
-  >
+    
     <TooltipProvider>
       <AuthProvider>
         <TodoProvider>
@@ -33,6 +26,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/auth" element={<Auth />} />
+              <Route path="/github-success" element={<GitHubCallback />} />
               <Route 
                 path="/dashboard" 
                 element={
@@ -47,7 +41,6 @@ const App = () => (
         </TodoProvider>
       </AuthProvider>
     </TooltipProvider>
-    </Auth0Provider>
   </QueryClientProvider>
 );
 

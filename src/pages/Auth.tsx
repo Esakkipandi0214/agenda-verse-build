@@ -27,11 +27,7 @@ const Auth = () => {
     return <Navigate to="/dashboard" replace />;
   }
 
-  const handleGoogleLogin = () => {
-    // TODO: Implement Google OAuth with your MongoDB backend
-    console.log('Google login clicked - integrate with your MongoDB backend');
-    // You can add your MongoDB/Google OAuth integration here
-  };
+  
 
   const validateForm = (isLogin: boolean) => {
     const errors: Record<string, string> = {};
@@ -121,7 +117,6 @@ const Auth = () => {
             <TabsContent value="login">
               <div className="space-y-4">
                 <SocialLoginButtons 
-                  onGoogleLogin={handleGoogleLogin}
                   isLoading={isLoading}
                 />
                 
@@ -173,7 +168,6 @@ const Auth = () => {
             <TabsContent value="register">
               <div className="space-y-4">
                 <SocialLoginButtons 
-                  onGoogleLogin={handleGoogleLogin}
                   isLoading={isLoading}
                 />
                 
