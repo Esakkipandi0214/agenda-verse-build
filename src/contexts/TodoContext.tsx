@@ -135,7 +135,7 @@ export const TodoProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
 
     const parsedUser = JSON.parse(user);
-    const userId = parsedUser._id;
+    const userId = parsedUser.userId;
 
     try {
       const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/todos/user/${userId}`, {
