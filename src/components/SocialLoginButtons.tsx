@@ -14,7 +14,7 @@ const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
   //  const { loginWithRedirect } = useAuth0();
   const handleGitHubLogin = () => {
   const clientId = "Ov23licq6RJwZGiYK9jL";
-  const redirectUri = "http://localhost:3000/auth/github/callback";
+  const redirectUri = `${import.meta.env.VITE_API_BASE_URL}/auth/github/callback`;
   window.location.assign(`https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}`);
 };
   return (
