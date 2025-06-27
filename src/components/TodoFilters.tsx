@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
-import { Search, X, Filter, SortAsc, SortDesc } from 'lucide-react';
+import { Search, X, Filter, SortAsc, SortDesc,Tag } from 'lucide-react';
 
 const TodoFilters = () => {
   const {
@@ -59,13 +59,13 @@ const TodoFilters = () => {
         <div className="flex flex-col space-y-4">
           {/* Search and Quick Filters */}
           <div className="flex flex-col md:flex-row gap-4">
-            <div className="relative flex-1">
+            <div className="relative flex-1 ">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search todos..."
                 value={searchQuery}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
+                className="pl-10 sm:w-[70%] "
               />
             </div>
             
@@ -96,10 +96,7 @@ const TodoFilters = () => {
                 </Button>
               ))}
             </div>
-          </div>
-
-          {/* Sort and Advanced Filters */}
-          <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
+            <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
             <div className="flex  items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500" />
               <span className="text-sm font-medium text-gray-700">Sort by:</span>
@@ -145,11 +142,17 @@ const TodoFilters = () => {
               </Button>
             )}
           </div>
+          </div>
+
+          {/* Sort and Advanced Filters */}
 
           {/* Tags Filter */}
           {allTags.length > 0 && (
             <div>
+              <div className='flex items-center gap-2 mb-2'>
               <span className="text-sm font-medium text-gray-700 mb-2 block">Filter by tags:</span>
+              <Tag className="w-4 h-4 text-gray-500 inline-block mr-1" />
+              </div>
               <div className="flex flex-wrap gap-2">
                 {allTags.map((tag) => (
                   <Badge
