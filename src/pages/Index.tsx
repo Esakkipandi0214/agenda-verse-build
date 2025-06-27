@@ -27,7 +27,7 @@ const Index = () => {
       title: 'Personal Dashboard',
       description: 'Customizable workspace tailored to your unique workflow needs.',
     },
-  ];
+  ];  
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -56,9 +56,9 @@ const Index = () => {
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </Link>
-              <Button variant="outline" className="px-8 py-3 text-lg backdrop-blur-sm bg-white/50 hover:bg-white/70 transition-all transform hover:scale-105">
+              {/* <Button variant="outline" className="px-8 py-3 text-lg backdrop-blur-sm bg-white/50 hover:bg-white/70 transition-all transform hover:scale-105">
                 View Demo
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@ const Index = () => {
             </span>
           </div>
           <p className="text-gray-600">
-            © 2024 TodoVerse. Built with ❤️ for productivity enthusiasts.
+            © 2024 TodoVerse. 
           </p>
         </div>
       </footer>

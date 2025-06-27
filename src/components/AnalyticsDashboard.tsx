@@ -223,7 +223,7 @@ const AnalyticsDashboard = () => {
       )}
 
       {/* Quick Insights */}
-      <Card className="gradient-card border-0 shadow-lg">
+      <Card className="gradient-card hidden border-0 shadow-lg">
         <CardHeader>
           <CardTitle>Quick Insights</CardTitle>
         </CardHeader>

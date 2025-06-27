@@ -11,6 +11,7 @@ import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { LogOut, Plus, User, BarChart3, List } from 'lucide-react';
+import Tooltip from '@mui/material/Tooltip'
 
 const Dashboard = () => {
   const { user, logout } = useAuth();
@@ -28,7 +29,7 @@ const Dashboard = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center">
                 <span className="text-lg font-bold text-white">T</span>
               </div>
-              <div>
+              <div className=' hidden sm:block'>
                 <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                   TodoVerse
                 </h1>
@@ -39,10 +40,12 @@ const Dashboard = () => {
             <div className="flex items-center space-x-3">
               <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
                 <DialogTrigger asChild>
-                  <Button className="gradient-primary hover:opacity-90 transition-opacity">
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Todo
+                  <Tooltip title="Add Todo" placement="bottom">
+                  <Button className="gradient-primary  w-8 sm:w-auto sm:h-auto h-8 hover:opacity-90 transition-opacity">
+                    <Plus className=" w-8 h-8 sm:w-4 sm:h-4" />
+                    <p className=' hidden sm:block'>Add Todo</p>
                   </Button>
+                  </Tooltip>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-md">
                   <DialogHeader>

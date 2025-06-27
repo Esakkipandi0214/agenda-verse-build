@@ -46,7 +46,7 @@ const TodoStats: React.FC<TodoStatsProps> = ({ stats }) => {
   ];
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
       {statCards.map((stat, index) => (
         <Card key={stat.title} className="gradient-card border-0 shadow-lg animate-scale-in" style={{ animationDelay: `${index * 0.1}s` }}>
           <CardContent className="p-6">

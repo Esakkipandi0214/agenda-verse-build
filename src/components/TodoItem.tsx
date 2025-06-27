@@ -80,7 +80,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index }) => {
       ref={setNodeRef}
       style={style}
       className={`
-        group p-4 rounded-lg border bg-white/50 hover:bg-white/70 transition-all duration-200
+        group py-3 rounded-lg border bg-white/50 hover:bg-white/70 transition-all duration-200
         hover:shadow-md hover:scale-[1.02] animate-slide-up
         ${todo.completed ? 'opacity-60' : ''}
         ${isOverdue && !todo.completed ? 'border-red-200 bg-red-50/50' : ''}
@@ -107,8 +107,8 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index }) => {
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
-                <div className={`w-2 h-2 rounded-full ${getPriorityDot(todo.priority)}`} />
+              <div className="flex items-center gap-2 mb-2 sm:mb-1">
+                <div className={`w-2 h-2 hidden sm:flex rounded-full ${getPriorityDot(todo.priority)}`} />
                 <h3 className={`font-medium ${todo.completed ? 'line-through text-gray-500' : ''}`}>
                   {todo.title}
                 </h3>
@@ -123,7 +123,7 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index }) => {
                 </p>
               )}
               
-              <div className="flex items-center gap-4 text-xs text-gray-500">
+              <div className="flex  sm:items-center justify-between sm:justify-start sm:gap-4 text-xs text-gray-500">
                 {todo.dueDate && (
                   <div className={`flex items-center gap-1 ${
                     isOverdue && !todo.completed ? 'text-red-600' : 

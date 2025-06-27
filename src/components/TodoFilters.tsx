@@ -55,7 +55,7 @@ const TodoFilters = () => {
 
   return (
     <Card className="gradient-card border-0 shadow-lg mb-6">
-      <CardContent className="p-6">
+      <CardContent className=" p-6">
         <div className="flex flex-col space-y-4">
           {/* Search and Quick Filters */}
           <div className="flex flex-col md:flex-row gap-4">
@@ -69,7 +69,21 @@ const TodoFilters = () => {
               />
             </div>
             
-            <div className="flex gap-2">
+            <div className="sm:flex hidden gap-2">
+              {filterOptions.map((option) => (
+                <Button
+                  key={option.value}
+                  variant={filter === option.value ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFilter(option.value as any)}
+                  className={filter === option.value ? 'gradient-primary' : ''}
+                >
+                  {option.label}
+                </Button>
+              ))}
+            </div>
+
+             <div className="grid grid-cols-3 justify-between sm:hidden gap-2">
               {filterOptions.map((option) => (
                 <Button
                   key={option.value}
@@ -86,7 +100,7 @@ const TodoFilters = () => {
 
           {/* Sort and Advanced Filters */}
           <div className="flex flex-col md:flex-row gap-4 items-start md:items-center">
-            <div className="flex items-center gap-2">
+            <div className="flex  items-center gap-2">
               <Filter className="w-4 h-4 text-gray-500" />
               <span className="text-sm font-medium text-gray-700">Sort by:</span>
               <Select
