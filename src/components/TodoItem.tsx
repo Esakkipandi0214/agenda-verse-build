@@ -115,17 +115,10 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index }) => {
                 <Badge className={`text-xs ${getPriorityColor(todo.priority)}`}>
                   {todo.priority}
                 </Badge>
-              </div>
-              
-              {todo.description && (
-                <p className={`text-sm text-gray-600 mb-2 ${todo.completed ? 'line-through' : ''}`}>
-                  {todo.description}
-                </p>
-              )}
-              
-              <div className="flex  sm:items-center justify-between sm:justify-start sm:gap-4 text-xs text-gray-500">
+              </div>              
+              <div className="sm:flex space-y-2 sm:space-y-0  sm:items-center justify-between sm:justify-start sm:gap-4 text-xs text-gray-500">
                 {todo.dueDate && (
-                  <div className={`flex items-center gap-1 ${
+                  <div className={`flex items-center justify-between sm:justify-start gap-1 ${
                     isOverdue && !todo.completed ? 'text-red-600' : 
                     isDueToday && !todo.completed ? 'text-yellow-600' : ''
                   }`}>
@@ -133,11 +126,16 @@ const TodoItem: React.FC<TodoItemProps> = ({ todo, index }) => {
                     <span>{formatDueDate(todo.dueDate)}</span>
                   </div>
                 )}
-                <div className="flex items-center gap-1">
+                <div className="flex items-center justify-between sm:justify-start gap-1">
                   <Clock className="w-3 h-3" />
                   <span>Created {format(todo.createdAt, 'MMM d')}</span>
                 </div>
               </div>
+               {todo.description && (
+                <p className={`text-sm py-2 px-1 my-1 rounded-md sm:p-4 bg-gray-500/10 text-gray-600 mb-2 ${todo.completed ? 'line-through' : ''}`}>
+                  {todo.description}
+                </p>
+              )}
               
               {todo.tags.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-2">
