@@ -158,9 +158,6 @@ const Auth = () => {
                   >
                     {isLoading ? 'Signing in...' : 'Sign In'}
                   </Button>
-                  <p className="text-sm text-gray-600 text-center mt-4">
-                    Demo credentials: demo@example.com / password
-                  </p>
                 </form>
               </div>
             </TabsContent>
