@@ -1,4 +1,5 @@
 import axios from 'axios';
+import {toast} from 'sonner'; // or "@/components/ui/sonner" if using alias
 interface Todo {
   id: string;
   title: string;
@@ -35,9 +36,14 @@ export const addTodoFromApi = async (
       updatedAt: new Date(createdTodo.updatedAt),
     };
 
+    toast.success('Todo Creation',{description: `Todo "${formatted.title}" created successfully!`});
+
     return formatted;
   } catch (error) {
     console.error('Failed to create todo:', error);
+    toast.error('Todo Creation Failed', {
+      description: error instanceof Error ? error.message : 'An unexpected error occurred',
+    });
     return null;
   }
 };
@@ -62,10 +68,15 @@ export const toggleTodoStatusFromApi = async (
       createdAt: new Date(updated.createdAt),
       updatedAt: new Date(updated.updatedAt),
     };
-
+    toast.success('Todo Status Updated', {
+      description: `Todo "${formatted.title}" status toggled successfully!`,
+    });
     return formatted;
   } catch (error) {
     console.error('Failed to toggle todo status:', error);
+    toast.error('Todo Status Update Failed', {
+      description: error instanceof Error ? error.message : 'An unexpected error occurred',
+    });
     return null;
   }
 };
@@ -81,9 +92,15 @@ export const deleteTodoFromApi = async (
         Authorization: `Bearer ${token}`,
       },
     });
+    toast.success('Todo Deleted', {
+      description: 'Todo deleted successfully!',
+    });
     return true;
   } catch (error) {
     console.error('Failed to delete todo:', error);
+    toast.error('Todo Deletion Failed', {
+      description: error instanceof Error ? error.message : 'An unexpected error occurred',
+    });
     return false;
   }
 };
@@ -108,10 +125,15 @@ export const updateTodoFromApi = async (
       createdAt: new Date(updated.createdAt),
       updatedAt: new Date(updated.updatedAt),
     };
-
+    toast.success('Todo Updated', {
+      description: `Todo "${formatted.title}" updated successfully!`,
+    });
     return formatted;
   } catch (error) {
     console.error('Failed to update todo:', error);
+    toast.error('Todo Update Failed', {
+      description: error instanceof Error ? error.message : 'An unexpected error occurred',
+    });
     return null;
   }
 };

@@ -1,6 +1,7 @@
 
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from "sonner";
 
 interface User {
   id: string;
@@ -110,6 +111,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.setItem('user', JSON.stringify(user));
 
     dispatch({ type: 'AUTH_SUCCESS', payload: user });
+      toast.success(`Welcome back, ${user.name || 'User'}!`);
   } catch (error: any) {
     const message =
       error.response?.data?.error ||
@@ -117,6 +119,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       'Login failed';
 
     dispatch({ type: 'AUTH_ERROR', payload: message });
+     toast.warning('Login Failed', {
+  description: message,
+});
   }
 };
 
@@ -140,13 +145,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     // Optional: Set token for future API calls
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    // ✅ Success toast
+    toast.success('Registration ',{description:'Account created successfully!'});
   } catch (error: any) {
-    const message =
-      error.response?.data?.error ||
-      error.message ||
-      'Registration failed';
+     const backendMessage = error.response?.data?.error;
+    let friendlyMessage = 'Registration failed. Please try again.';
 
-    dispatch({ type: 'AUTH_ERROR', payload: message });
+    // ✅ Handle specific backend messages
+    if (backendMessage === 'All fields are required.') {
+      friendlyMessage = 'Please fill in all required fields.';
+    } else if (backendMessage === 'This email is already registered. Please login.') {
+      friendlyMessage = 'That email is already in use. Try logging in instead.';
+    } else if (backendMessage === 'Please enter a valid email address.') {
+      friendlyMessage = 'Enter a valid email address.';
+    } else if (backendMessage === 'Password must be at least 6 characters long.') {
+      friendlyMessage = 'Password must be at least 6 characters.';
+    } else if (backendMessage) {
+      friendlyMessage = backendMessage;
+    }
+
+    dispatch({ type: 'AUTH_ERROR', payload: friendlyMessage });
+
+    // ❌ Error toast
+    toast.error( 'Registration Failed', {
+  description: friendlyMessage,
+} );
   }
 };
 
@@ -155,6 +178,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     dispatch({ type: 'LOGOUT' });
+    toast.error(`Logged out Successfully !`);
   };
 
   const clearError = () => {
